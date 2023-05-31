@@ -8,8 +8,9 @@ CREATE TABLE `Anime` (
     `title` TEXT,
     `start_date` DATETIME,
     `end_date` DATETIME,
+    -- mean score
     `mean_score` FLOAT,
-    `rank` INT UNSIGNED,
+    `anime_rank` INT UNSIGNED,
     `popularity` INT UNSIGNED,
     `num_list_users` INT UNSIGNED,
     `num_scoring_users` INT UNSIGNED,
@@ -29,7 +30,6 @@ CREATE TABLE `Anime` (
     `status_on_hold` MEDIUMINT UNSIGNED,
     `status_dropped` MEDIUMINT UNSIGNED,
     `status_plan_to_watch` MEDIUMINT UNSIGNED,
-    `status_num_list_users` MEDIUMINT UNSIGNED,
     PRIMARY KEY (`id`)
 );
 
@@ -68,6 +68,7 @@ CREATE TABLE `Anime_Genre`(
 		FOREIGN KEY `anime_fk` (`anime_id`) 
         REFERENCES `Anime` (`id`)
         ON DELETE CASCADE,
+        
 	CONSTRAINT `Constraint_Anime_Genre_Genre_fk`
 		FOREIGN KEY `genre_fk` (`genre_id`)
         REFERENCES `Genre` (`id`)
@@ -77,18 +78,21 @@ CREATE TABLE `Anime_Genre`(
 
 CREATE TABLE `Related_Anime`(
 	`anime_id` BIGINT UNSIGNED NOT NULL,
-    `parent_anime_id` BIGINT UNSIGNED NOT NULL,
+    `related_anime_id` BIGINT UNSIGNED NOT NULL,
 	-- 1 if prequel, 0 if side story or other
 	`relation_prequel` BIT,
 	CONSTRAINT `Constraint_Related_Anime_Anime_fk`
 		FOREIGN KEY (`anime_id`) 
         REFERENCES `Anime` (`id`)
         ON DELETE CASCADE,
-	CONSTRAINT `Constraint_Related_Anime_Parent_Anime_fk`
-		FOREIGN KEY (`parent_anime_id`)
-        REFERENCES `Anime` (`id`)
-        ON DELETE CASCADE,
-	PRIMARY KEY (`anime_id`, `parent_anime_id`)
+-- Removed constraint. Related anime id has to be inserted even when the
+-- related anime is not yet in the db, because doing otherwise
+-- would lead to infinite recursion issues.
+-- 	CONSTRAINT `Constraint_Related_Anime_Related_Anime_fk`
+-- 		FOREIGN KEY (`related_anime_id`)
+--         REFERENCES `Anime` (`id`)
+--         ON DELETE CASCADE,
+	PRIMARY KEY (`anime_id`, `related_anime_id`)
 );
 
 CREATE TABLE `MAL_Anime_Recommendation`(
@@ -99,10 +103,13 @@ CREATE TABLE `MAL_Anime_Recommendation`(
 		FOREIGN KEY (`anime_id`) 
         REFERENCES `Anime` (`id`)
         ON DELETE CASCADE,
-	CONSTRAINT `Constraint_MAL_Anime_Recommendation_Recommended_Anime_fk`
-		FOREIGN KEY (`recommended_anime_id`)
-        REFERENCES `Anime` (`id`)
-        ON DELETE CASCADE,
+-- Removed constraint. Recommended anime id has to be inserted even when the
+-- recommended anime is not yet in the db, because doing otherwise
+-- would lead to infinite recursion issues.
+-- 	CONSTRAINT `Constraint_MAL_Anime_Recommendation_Recommended_Anime_fk`
+-- 		FOREIGN KEY (`recommended_anime_id`)
+--         REFERENCES `Anime` (`id`)
+--         ON DELETE CASCADE,
 	PRIMARY KEY (`anime_id`, `recommended_anime_id`)
 );
 
@@ -137,4 +144,16 @@ CREATE TABLE `List_Entry`(
 -- INSERT INTO User (id) VALUES (69);
 
 -- SELECT * FROM List_Entry;
+SELECT * FROM User;
+SELECT * FROM Anime;
+SELECT * FROM List_Entry;
+SELECT * FROM MAL_Anime_Recommendation;
+
+SELECT username FROM User GROUP BY username;
+SELECT username, COUNT(*) AS CNT FROM User GROUP BY username HAVING COUNT(*) > 1;
+SELECT * FROM User WHERE id NOT IN
+(
+SELECT MAX(id) FROM User GROUP BY username;
+);
+-- INSERT INTO Anime (id, title, start_date, end_date, mean, popularity, num_list_users, num_scoring_users, nsfw, media_type, status, num_episodes, season_year, season, broadcast_day_of_week, broadcast_start_time, source, average_episode_duration, rating, status_watching, status_completed, status_on_hold, status_dropped, status_plan_to_watch) VALUES (52034, 'Oshi no Ko', '2023-04-12', NULL, 9.02, 439, 468515, 161715, \'white\', \'tv\', \'currently_airing\', 11, 2023, \'spring\', \'wednesday\', \'23:00\', \'manga\', 1800, \'pg_13\', \'333788\', \'25\', \'4350\', \'4691\', \'125509\');
 
