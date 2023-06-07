@@ -1,4 +1,5 @@
 DROP DATABASE Anime;
+-- DROP USER 'anidb'@'localhost';
 CREATE DATABASE IF NOT EXISTS Anime;
 USE Anime;
 
@@ -117,6 +118,8 @@ CREATE TABLE `User`(
 	-- id NOT from MAL database. Would require additional requests and user_id is not needed.
 	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`username` TEXT,
+    -- Used during data collection.
+    `list_collected` BIT,
     PRIMARY KEY (`id`)
 );
 
@@ -140,20 +143,5 @@ CREATE TABLE `List_Entry`(
 	PRIMARY KEY (`anime_id`, `user_id`)
 );
 
--- INSERT INTO Anime (id) VALUES (52034);
--- INSERT INTO User (id) VALUES (69);
-
--- SELECT * FROM List_Entry;
-SELECT * FROM User;
-SELECT * FROM Anime;
-SELECT * FROM List_Entry;
-SELECT * FROM MAL_Anime_Recommendation;
-
-SELECT username FROM User GROUP BY username;
-SELECT username, COUNT(*) AS CNT FROM User GROUP BY username HAVING COUNT(*) > 1;
-SELECT * FROM User WHERE id NOT IN
-(
-SELECT MAX(id) FROM User GROUP BY username;
-);
--- INSERT INTO Anime (id, title, start_date, end_date, mean, popularity, num_list_users, num_scoring_users, nsfw, media_type, status, num_episodes, season_year, season, broadcast_day_of_week, broadcast_start_time, source, average_episode_duration, rating, status_watching, status_completed, status_on_hold, status_dropped, status_plan_to_watch) VALUES (52034, 'Oshi no Ko', '2023-04-12', NULL, 9.02, 439, 468515, 161715, \'white\', \'tv\', \'currently_airing\', 11, 2023, \'spring\', \'wednesday\', \'23:00\', \'manga\', 1800, \'pg_13\', \'333788\', \'25\', \'4350\', \'4691\', \'125509\');
-
+CREATE USER 'anidb'@'localhost' IDENTIFIED BY 'anidb';
+GRANT ALL PRIVILEGES ON Anime.* TO 'anidb'@'localhost' WITH GRANT OPTION;
