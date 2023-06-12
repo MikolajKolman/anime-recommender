@@ -145,3 +145,5 @@ CREATE TABLE `List_Entry`(
 
 CREATE USER 'anidb'@'localhost' IDENTIFIED BY 'anidb';
 GRANT ALL PRIVILEGES ON Anime.* TO 'anidb'@'localhost' WITH GRANT OPTION;
+
+
