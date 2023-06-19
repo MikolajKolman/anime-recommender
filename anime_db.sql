@@ -1,7 +1,12 @@
-DROP DATABASE Anime;
+-- DROP DATABASE Anime;
+-- -- DROP USER 'anidb'@'localhost';
+-- CREATE DATABASE IF NOT EXISTS Anime;
+-- USE Anime;
+
+-- DROP DATABASE Anime_tet;
 -- DROP USER 'anidb'@'localhost';
-CREATE DATABASE IF NOT EXISTS Anime;
-USE Anime;
+CREATE DATABASE IF NOT EXISTS Anime_tet;
+USE Anime_tet;
 
 CREATE TABLE `Anime` (
 	-- id from MAL database
@@ -143,7 +148,10 @@ CREATE TABLE `List_Entry`(
 	PRIMARY KEY (`anime_id`, `user_id`)
 );
 
-CREATE USER 'anidb'@'localhost' IDENTIFIED BY 'anidb';
-GRANT ALL PRIVILEGES ON Anime.* TO 'anidb'@'localhost' WITH GRANT OPTION;
+-- CREATE USER 'anidb'@'localhost' IDENTIFIED BY 'anidb';
+-- GRANT ALL PRIVILEGES ON Anime_tet.* TO 'anidb'@'localhost' WITH GRANT OPTION;
 
+-- use anime_tet;
+-- select * from anime limit 1;
+select * from Studio;
 
